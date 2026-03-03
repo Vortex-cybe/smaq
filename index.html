@@ -1,28 +1,474 @@
-export async function onRequestPost({ request, env }) {
-  try {
-    const data = await request.json();
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Support IT & Sécurité PME – Liège</title>
+  <meta name="description" content="Support IT & sécurité pour PME à Liège. Microsoft 365, sauvegardes, urgences email/site, audit sécurité. Devis validé avant intervention. Facturation via Smart." />
+  <meta name="robots" content="index,follow" />
 
-    // validation minimale
-    if (!data?.name || !data?.email || !data?.need || !data?.msg) {
-      return new Response(JSON.stringify({ ok:false, error:"missing_fields" }), {
-        status: 400, headers: { "Content-Type":"application/json" }
-      });
+  <!-- OpenGraph -->
+  <meta property="og:title" content="Support IT & Sécurité PME — Liège" />
+  <meta property="og:description" content="Microsoft 365 • Sauvegardes • Urgences • Audit sécurité. Devis validé avant intervention." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#ffffff; --ink:#0b0d12; --muted:#5b6472; --line:rgba(16,24,40,.12);
+      --accent:#111827; --max: 980px;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{ margin:0; font-family:var(--sans); background:var(--bg); color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:var(--max); margin:0 auto; padding:28px 18px; }
+
+    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 0 18px; border-bottom:1px solid var(--line); }
+    .brand{ font-weight:650; letter-spacing:-.2px; white-space:nowrap; }
+    nav{ display:flex; gap:14px; font-size:14px; color:var(--muted); flex-wrap:wrap; justify-content:flex-end; }
+    nav a:hover{ color:var(--ink); }
+
+    h1{ font-size:40px; line-height:1.1; letter-spacing:-.8px; margin:0 0 12px; font-weight:650; }
+    h2{ font-size:18px; margin:0 0 12px; font-weight:650; letter-spacing:-.2px; }
+    h3{ margin:0 0 8px; font-size:14px; font-weight:650; color:var(--ink); }
+    p{ margin:0 0 12px; color:var(--muted); }
+    .lead{ font-size:16px; color:var(--muted); max-width:72ch; }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border:1px solid var(--line); background:transparent; border-radius:10px; font-size:14px; cursor:pointer; }
+    .btn:hover{ border-color:rgba(16,24,40,.22); }
+    .btn.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+    .btn.primary:hover{ opacity:.92; }
+
+    section{ padding:28px 0; border-bottom:1px solid var(--line); }
+    section:last-of-type{ border-bottom:none; }
+
+    .grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:10px; }
+    .box{ padding:14px 0; }
+    .box ul{ margin:0; padding-left:16px; color:var(--muted); font-size:14px; }
+    .box li{ margin:6px 0; }
+
+    .pricing{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:10px; }
+    .price{ padding:14px 0; }
+    .tag{ font-family:var(--mono); font-size:16px; color:var(--ink); margin:8px 0 10px; }
+    .note{ font-size:12px; color:var(--muted); margin-top:8px; }
+
+    .contact{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:10px; }
+    label{ display:block; font-size:13px; color:var(--muted); margin:10px 0 6px; }
+    input, textarea, select{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+      background:#fff; color:var(--ink); outline:none; font-size:14px;
+    }
+    input:focus, textarea:focus, select:focus{ border-color:rgba(17,24,39,.35); }
+    textarea{ min-height:120px; resize:vertical; }
+
+    .kv{ display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+    .kv:first-child{ border-top:none; }
+    .kv strong{ color:var(--ink); font-weight:650; }
+
+    .pillrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .pill{ border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-size:13px; color:var(--muted); }
+
+    .ok{ color:#0b0d12; }
+    .err{ color:#8a1f1f; }
+
+    footer{ padding:18px 0 6px; color:var(--muted); font-size:12px; }
+
+    @media print{
+      header, #hero, #services, #tarifs, #contact, #engagements, #method, #cases, footer{ display:none !important; }
+      #conditions{ border-bottom:none !important; }
+      body{ background:#fff; }
     }
 
-    const id = crypto.randomUUID();
-    const key = `lead:${Date.now()}:${id}`;
-
-    // KV optionnel
-    if (env.LEADS_KV) {
-      await env.LEADS_KV.put(key, JSON.stringify(data), { expirationTtl: 60 * 60 * 24 * 365 });
+    @media (max-width: 860px){
+      h1{ font-size:34px; }
+      .grid, .pricing{ grid-template-columns:1fr; }
+      .contact{ grid-template-columns:1fr; }
+      nav{ display:none; }
     }
+  </style>
 
-    return new Response(JSON.stringify({ ok:true, id }), {
-      status: 200, headers: { "Content-Type":"application/json" }
-    });
-  } catch (e) {
-    return new Response(JSON.stringify({ ok:false, error:"bad_request" }), {
-      status: 400, headers: { "Content-Type":"application/json" }
-    });
+  <!-- Schema.org LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"Support IT & Sécurité PME — Liège",
+    "areaServed":"Liège",
+    "telephone":"+32471497779",
+    "email":"smaq.dev.web@gmail.com",
+    "url":"https://smaq.pages.dev/",
+    "priceRange":"€€",
+    "serviceType":["Support IT","Microsoft 365","Sauvegardes","Urgence email/site","Audit sécurité PME"]
   }
-}
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Support IT & Sécurité PME — Liège</div>
+      <nav aria-label="Navigation">
+        <a href="#services">Services</a>
+        <a href="#engagements">Engagements</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#contact">Contact</a>
+        <a href="#conditions">Conditions</a>
+      </nav>
+    </header>
+
+    <section id="hero">
+      <h1>Réduis le risque.<br>Récupère le contrôle.</h1>
+      <p class="lead">
+        Microsoft 365, sauvegardes, urgences email/site, audit sécurité PME — interventions ponctuelles
+        sur site ou à distance à Liège.
+        <br><strong class="ok">Devis validé avant intervention.</strong> Zéro surprise.
+      </p>
+
+      <div class="pillrow" aria-label="Points clés">
+        <div class="pill">Réponse ≤ 24h (jours ouvrables)</div>
+        <div class="pill">Compte rendu clair</div>
+        <div class="pill">Facturation via Smart</div>
+        <div class="pill">Liège + environs</div>
+      </div>
+
+      <div class="row" style="margin-top:14px;">
+        <a class="btn primary" href="#contact">Demander un diagnostic (15 min)</a>
+        <button class="btn" type="button" id="callBtn">Appeler</button>
+        <button class="btn" type="button" id="printConditionsBtn">Imprimer les conditions</button>
+      </div>
+
+      <div class="note">
+        Ce que tu gagnes : moins d’indisponibilités, sauvegardes testées, accès mieux verrouillés.
+      </div>
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <p>Un périmètre clair, orienté continuité et sécurité.</p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Support IT PME</h3>
+          <ul>
+            <li>Microsoft 365 (setup, migration, comptes, MFA)</li>
+            <li>Postes / imprimantes / réseau basique</li>
+            <li>Compte rendu + recommandations</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Urgence Email / Site</h3>
+          <ul>
+            <li>DNS / SSL / délivrabilité</li>
+            <li>Email indisponible, site down</li>
+            <li>WordPress compromis, migration</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>Audit Sécurité PME</h3>
+          <ul>
+            <li>Admins, MFA, accès sensibles</li>
+            <li>Sauvegardes + test restauration</li>
+            <li>Plan d’action priorisé</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="engagements">
+      <h2>Engagements</h2>
+      <p>Ce que tu peux attendre d’une intervention.</p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Transparence</h3>
+          <ul>
+            <li>Devis validé avant action</li>
+            <li>Périmètre écrit</li>
+            <li>Pas de vente forcée</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Traçabilité</h3>
+          <ul>
+            <li>Compte rendu simple</li>
+            <li>Actions effectuées listées</li>
+            <li>Recommandations priorisées</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Continuité</h3>
+          <ul>
+            <li>Sauvegardes vérifiées</li>
+            <li>Tests de restauration (si prévu)</li>
+            <li>Réduction des points uniques de panne</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="cases">
+      <h2>Cas typiques (anonymisés)</h2>
+      <p>Exemples réels de problèmes rencontrés en PME — sans inventer d’avis.</p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Compte 365 compromis</h3>
+          <ul>
+            <li>MFA absent / règles de transfert</li>
+            <li>Nettoyage + sécurisation</li>
+            <li>Plan anti-récidive</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Sauvegardes inutilisables</h3>
+          <ul>
+            <li>Backup jamais testé</li>
+            <li>Test restauration + corrections</li>
+            <li>Procédure de reprise</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Site down / DNS</h3>
+          <ul>
+            <li>SSL/DNS/expire</li>
+            <li>Rétablissement + durcissement</li>
+            <li>Checklist de prévention</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="method">
+      <h2>Méthode</h2>
+      <p>Simple, efficace, documenté.</p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>1) Diagnostic</h3>
+          <ul><li>15 min pour cadrer</li><li>Priorité + risques</li><li>Accès nécessaires</li></ul>
+        </div>
+        <div class="box">
+          <h3>2) Devis</h3>
+          <ul><li>Périmètre écrit</li><li>Prix clair</li><li>Bon pour accord</li></ul>
+        </div>
+        <div class="box">
+          <h3>3) Intervention</h3>
+          <ul><li>Sur site / à distance</li><li>Rétablissement & sécurisation</li><li>Compte rendu</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="tarifs">
+      <h2>Tarifs</h2>
+      <p>Forfaits simples. Validation par écrit avant intervention.</p>
+
+      <div class="pricing">
+        <div class="price">
+          <h3>Support</h3>
+          <div class="tag">70€ / heure</div>
+          <ul style="margin:0; padding-left:16px; color:var(--muted); font-size:14px;">
+            <li>Minimum : 2h</li>
+            <li>Demi-journée : 350€</li>
+            <li>Journée : 650€</li>
+          </ul>
+        </div>
+
+        <div class="price">
+          <h3>Urgence</h3>
+          <div class="tag">À partir de 150€</div>
+          <ul style="margin:0; padding-left:16px; color:var(--muted); font-size:14px;">
+            <li>Diagnostic express : 150€</li>
+            <li>Intervention standard : 400€</li>
+            <li>Complexe : 600–900€</li>
+          </ul>
+        </div>
+
+        <div class="price">
+          <h3>Audit sécurité</h3>
+          <div class="tag">950€ forfait</div>
+          <ul style="margin:0; padding-left:16px; color:var(--muted); font-size:14px;">
+            <li>Contrôles essentiels PME</li>
+            <li>Rapport PDF + priorités</li>
+            <li>Plan d’action court</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">Si le périmètre dépasse ces forfaits : devis.</div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>Décris le problème + urgence + outils (M365 / hébergeur / DNS). Tu reçois une réponse sous 24h.</p>
+
+      <div class="contact">
+        <div>
+          <form id="contactForm">
+            <!-- honeypot anti-spam -->
+            <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+              <label for="hp">Ne pas remplir</label>
+              <input id="hp" name="company_website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <label for="name">Nom / Société</label>
+            <input id="name" name="name" required>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+
+            <label for="phone">Téléphone (optionnel)</label>
+            <input id="phone" name="phone" inputmode="tel">
+
+            <label for="need">Type de demande</label>
+            <select id="need" name="need" required>
+              <option value="">Choisir…</option>
+              <option>Support IT PME</option>
+              <option>Urgence Email / Site</option>
+              <option>Audit Sécurité PME</option>
+              <option>Autre</option>
+            </select>
+
+            <label for="msg">Message</label>
+            <textarea id="msg" name="msg" required></textarea>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" type="submit" id="submitBtn">Envoyer</button>
+            </div>
+
+            <div class="note" id="formStatus" aria-live="polite"></div>
+            <div class="note">Envoi direct (pas de mailto). Tu peux suivre tes leads.</div>
+          </form>
+        </div>
+
+        <div>
+          <div class="kv"><span>Email</span><strong id="emailText"></strong></div>
+          <div class="kv"><span>Téléphone</span><strong id="phoneText"></strong></div>
+          <div class="kv"><span>Zone</span><strong>Liège</strong></div>
+          <div class="kv"><span>Intervention</span><strong>Sur site / à distance</strong></div>
+          <div class="note" style="margin-top:12px;">
+            Pour une urgence : indique le domaine, l’hébergeur, l’heure du dernier fonctionnement et les accès disponibles.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="conditions">
+      <h2>Conditions d’intervention</h2>
+      <p>Cadre de travail. Applicable PME.</p>
+
+      <div style="color:var(--muted); font-size:14px;">
+        <p><strong style="color:var(--ink);">Facturation via Smart</strong><br>
+        Les prestations sont réalisées dans le cadre de Smart. La facture est émise au client via Smart, qui assure la gestion administrative.
+        Les modalités de paiement figurent sur la facture.</p>
+
+        <p><strong style="color:var(--ink);">Devis et accord</strong><br>
+        Toute intervention fait l’objet d’un accord préalable (email “bon pour accord” ou devis signé). Le périmètre et le tarif sont validés avant exécution.</p>
+
+        <p><strong style="color:var(--ink);">Délais de paiement</strong><br>
+        Sauf mention contraire sur le devis / la facture : paiement à 14 jours calendrier.</p>
+
+        <p><strong style="color:var(--ink);">Accès et collaboration</strong><br>
+        Le client fournit les accès nécessaires (comptes, hébergeur, M365, DNS, etc.). En cas d’impossibilité d’accès, l’intervention peut être suspendue.</p>
+
+        <p><strong style="color:var(--ink);">Sauvegardes et données</strong><br>
+        Le client reste responsable de la sauvegarde de ses données, sauf si une prestation de sauvegarde et/ou test de restauration est explicitement incluse et validée.</p>
+
+        <p><strong style="color:var(--ink);">Limitation de responsabilité</strong><br>
+        Les interventions sont réalisées avec diligence professionnelle. La responsabilité, en cas de dommage direct prouvé, est limitée au montant de la prestation facturée pour l’intervention concernée.</p>
+
+        <p><strong style="color:var(--ink);">Urgences</strong><br>
+        Les interventions urgentes (site/email indisponibles) sont facturées selon la complexité et validées avant exécution.</p>
+
+        <p class="note" style="font-family:var(--mono);">
+          Version 1.1 • Mise à jour : <span id="dateText"></span>
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> • Support IT & Sécurité PME — Liège • Prestations facturées via Smart
+    </footer>
+  </div>
+
+  <script>
+    const CONTACT_EMAIL = "smaq.dev.web@gmail.com";
+    const CONTACT_PHONE_TEL = "+32471497779";
+    const CONTACT_PHONE_DISPLAY = "0471 49 77 79";
+
+    // IMPORTANT : change cette URL si tu utilises une Pages Function (option B ci-dessous)
+    const FORM_ENDPOINT = "/api/lead";
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("dateText").textContent = new Date().toLocaleDateString("fr-BE");
+    document.getElementById("emailText").textContent = CONTACT_EMAIL;
+    document.getElementById("phoneText").textContent = CONTACT_PHONE_DISPLAY;
+
+    document.getElementById("callBtn").addEventListener("click", () => {
+      window.location.href = "tel:" + CONTACT_PHONE_TEL;
+    });
+
+    document.getElementById("printConditionsBtn").addEventListener("click", () => {
+      document.getElementById("conditions").scrollIntoView({behavior:"smooth", block:"start"});
+      setTimeout(() => window.print(), 400);
+    });
+
+    const statusEl = document.getElementById("formStatus");
+    const submitBtn = document.getElementById("submitBtn");
+
+    document.getElementById("contactForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "note";
+
+      // honeypot
+      const hp = document.getElementById("hp").value.trim();
+      if (hp) {
+        statusEl.textContent = "OK.";
+        statusEl.className = "note ok";
+        return;
+      }
+
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        need: document.getElementById("need").value.trim(),
+        msg: document.getElementById("msg").value.trim(),
+        ts: Date.now(),
+        page: location.href,
+        ua: navigator.userAgent
+      };
+
+      if (!payload.name || !payload.email || !payload.need || !payload.msg) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Envoi…";
+
+      try{
+        const res = await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        statusEl.textContent = "Message envoyé. Réponse sous 24h (jours ouvrables).";
+        statusEl.className = "note ok";
+        e.target.reset();
+      }catch(err){
+        statusEl.textContent = "Erreur d’envoi. Appelle ou envoie un email direct.";
+        statusEl.className = "note err";
+      }finally{
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Envoyer";
+      }
+    });
+  </script>
+</body>
+</html>
