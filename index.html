@@ -1,606 +1,230 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Support IT & Sécurité PME à Liège. Microsoft 365, sauvegardes, urgences email/site, audit sécurité." />
-  <title>Support IT & Sécurité PME — Liège</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support IT & Sécurité PME – Liège</title>
 
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --panel:#0f1620;
-      --text:#e8eef6;
-      --muted:#a9b4c2;
-      --line:rgba(232,238,246,.12);
-      --accent:#8fb3ff;
-      --accent2:#7ff0c5;
-      --shadow: 0 18px 50px rgba(0,0,0,.55);
-      --radius:18px;
-      --max: 1080px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#ffffff;
+  color:#1a1a1a;
+}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: var(--sans);
-      background: radial-gradient(1200px 800px at 20% 10%, rgba(143,179,255,.16), transparent 55%),
-                  radial-gradient(1000px 700px at 80% 30%, rgba(127,240,197,.10), transparent 60%),
-                  var(--bg);
-      color: var(--text);
-      line-height:1.35;
-    }
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:40px 20px;
+}
 
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ max-width: var(--max); margin:0 auto; padding: 22px; }
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+  padding-bottom:20px;
+}
 
-    /* Topbar */
-    .topbar{
-      position: sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter: blur(10px);
-      background: rgba(11,15,20,.65);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar .wrap{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight: 700;
-      letter-spacing:.2px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow: 0 0 0 6px rgba(143,179,255,.08);
-    }
-    nav{
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    nav a{ padding: 8px 10px; border-radius: 10px; }
-    nav a:hover{ background: rgba(232,238,246,.06); color: var(--text); }
+.logo{
+  font-weight:600;
+  font-size:18px;
+}
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border:1px solid rgba(232,238,246,.18);
-      background: rgba(232,238,246,.05);
-      color: var(--text);
-      cursor:pointer;
-      transition: transform .06s ease, background .2s ease, border-color .2s ease;
-      user-select:none;
-    }
-    .btn:hover{ background: rgba(232,238,246,.08); border-color: rgba(232,238,246,.28); }
-    .btn:active{ transform: translateY(1px); }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(143,179,255,.22), rgba(127,240,197,.16));
-      border-color: rgba(143,179,255,.35);
-    }
-    .btn.primary:hover{ border-color: rgba(143,179,255,.55); }
+nav a{
+  margin-left:25px;
+  text-decoration:none;
+  color:#555;
+  font-size:14px;
+}
 
-    /* Hero */
-    .hero{ padding: 48px 0 22px; }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      align-items: start;
-    }
-    .card{
-      background: rgba(15,22,32,.72);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .hero .card{ padding: 26px; }
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(143,179,255,.22);
-      background: rgba(143,179,255,.08);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    h1{
-      margin: 16px 0 10px;
-      font-size: 42px;
-      line-height: 1.05;
-      letter-spacing: -0.6px;
-    }
-    .lead{
-      color: var(--muted);
-      font-size: 16px;
-      max-width: 58ch;
-      margin: 0 0 18px;
-    }
-    .pillrow{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-      margin: 16px 0 20px;
-    }
-    .pill{
-      font-size: 13px;
-      color: var(--muted);
-      padding: 8px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(232,238,246,.12);
-      background: rgba(232,238,246,.04);
-    }
-    .ctaRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
-    .small{
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 12px;
-    }
+nav a:hover{
+  color:#000;
+}
 
-    /* Sidebar stats */
-    .side{ padding: 18px; }
-    .stat{
-      border:1px solid rgba(232,238,246,.10);
-      background: rgba(232,238,246,.03);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-    .stat .label{ color: var(--muted); font-size: 12px; }
-    .stat .value{ font-size: 22px; font-weight: 750; margin-top: 6px; letter-spacing:-.2px; }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 10px;
-      border-top: 1px solid rgba(232,238,246,.10);
-      padding-top: 12px;
-    }
+.hero{
+  padding:80px 0 60px 0;
+}
 
-    /* Sections */
-    section{ padding: 18px 0; }
-    .sectionTitle{
-      margin: 0 0 10px;
-      font-size: 20px;
-      letter-spacing: -.2px;
-    }
-    .muted{ color: var(--muted); }
+.hero h1{
+  font-size:38px;
+  margin-bottom:20px;
+  font-weight:600;
+}
 
-    .cols3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .tile{ padding: 16px; }
-    .tile h3{ margin: 0 0 6px; font-size: 16px; }
-    .tile p{ margin:0; color: var(--muted); font-size: 14px; }
+.hero p{
+  font-size:17px;
+  color:#555;
+  max-width:700px;
+}
 
-    /* Pricing */
-    .pricing{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .priceCard{ padding: 18px; }
-    .priceTag{
-      font-family: var(--mono);
-      font-size: 24px;
-      margin: 10px 0 12px;
-    }
-    ul.clean{ margin: 0; padding-left: 16px; color: var(--muted); }
-    ul.clean li{ margin: 7px 0; }
+.button{
+  display:inline-block;
+  margin-top:30px;
+  padding:14px 26px;
+  background:#000;
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+}
 
-    /* Reviews */
-    .reviews{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 12px;
-      align-items: start;
-    }
-    .reviewList{ padding: 18px; }
-    .review{
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(232,238,246,.10);
-      background: rgba(232,238,246,.03);
-      margin-bottom: 12px;
-    }
-    .reviewHead{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-      margin-bottom: 8px;
-    }
-    .stars{
-      letter-spacing: 1px;
-      font-size: 14px;
-      color: var(--accent);
-      white-space: nowrap;
-    }
-    .who{ font-size: 13px; color: var(--muted); }
-    .review p{ margin: 0; color: var(--text); font-size: 14px; }
-    .review small{ display:block; color: var(--muted); margin-top: 8px; }
+.section{
+  padding:70px 0;
+  border-top:1px solid #eee;
+}
 
-    .reviewScore{ padding: 18px; }
-    .score{
-      font-size: 44px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin: 4px 0 2px;
-    }
-    .scoreSub{ color: var(--muted); font-size: 13px; }
-    .meter{
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(232,238,246,.08);
-      border: 1px solid rgba(232,238,246,.10);
-      overflow:hidden;
-      margin: 14px 0 8px;
-    }
-    .meter > div{
-      height: 100%;
-      width: 94%;
-      background: linear-gradient(90deg, rgba(143,179,255,.55), rgba(127,240,197,.45));
-    }
-    .note{
-      font-size: 12px;
-      color: var(--muted);
-      border-top: 1px solid rgba(232,238,246,.10);
-      padding-top: 12px;
-      margin-top: 12px;
-    }
+.section h2{
+  font-size:26px;
+  margin-bottom:30px;
+  font-weight:600;
+}
 
-    /* Contact */
-    .contact{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      align-items:start;
-    }
-    form{ padding: 18px; }
-    label{ display:block; font-size: 13px; color: var(--muted); margin: 10px 0 6px; }
-    input, textarea, select{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border:1px solid rgba(232,238,246,.14);
-      background: rgba(11,15,20,.55);
-      color: var(--text);
-      outline:none;
-    }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(143,179,255,.55);
-      box-shadow: 0 0 0 4px rgba(143,179,255,.10);
-    }
-    textarea{ min-height: 120px; resize: vertical; }
-    .contactInfo{ padding: 18px; }
-    .line{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(232,238,246,.08);
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .line strong{ color: var(--text); font-weight: 650; }
-    .foot{
-      padding: 20px 0 34px;
-      color: var(--muted);
-      font-size: 12px;
-      border-top: 1px solid rgba(232,238,246,.08);
-      margin-top: 18px;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .grid, .reviews, .contact{ grid-template-columns: 1fr; }
-      h1{ font-size: 34px; }
-    }
-    @media (max-width: 760px){
-      .cols3, .pricing{ grid-template-columns: 1fr; }
-      nav{ display:none; }
-    }
-  </style>
+.card{
+  padding:25px;
+  border:1px solid #eee;
+}
+
+.card h3{
+  margin-top:0;
+  font-size:18px;
+}
+
+.card p{
+  color:#666;
+  font-size:14px;
+}
+
+.pricing{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+
+.price{
+  font-size:24px;
+  margin:15px 0;
+  font-weight:600;
+}
+
+.contact-box{
+  font-size:15px;
+  line-height:1.8;
+}
+
+footer{
+  border-top:1px solid #eee;
+  padding:40px 0;
+  font-size:13px;
+  color:#777;
+}
+
+@media(max-width:900px){
+  .grid, .pricing{
+    grid-template-columns:1fr;
+  }
+}
+</style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="wrap">
-      <div class="brand">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Support IT & Sécurité</span>
-        <span class="muted" style="font-weight:600">— Liège</span>
-      </div>
 
-      <nav aria-label="Navigation">
-        <a href="#services">Services</a>
-        <a href="#tarifs">Tarifs</a>
-        <a href="#avis">Avis</a>
-        <a href="#contact">Contact</a>
-      </nav>
+<div class="container">
 
-      <a class="btn primary" href="#contact">Demander un diagnostic</a>
-    </div>
-  </header>
+<header>
+<div class="logo">Support IT & Sécurité PME – Liège</div>
+<nav>
+<a href="#services">Services</a>
+<a href="#tarifs">Tarifs</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
 
-  <main class="wrap">
-    <section class="hero" id="top">
-      <div class="grid">
-        <div class="card">
-          <div class="kicker">Intervention rapide • PME • Liège</div>
-          <h1>Support IT & sécurité<br/>sans contrat long terme.</h1>
-          <p class="lead">
-            Microsoft 365, sauvegardes, urgences email/site, audit sécurité.
-            Objectif : résoudre vite, sécuriser proprement, documenter clairement.
-          </p>
+<section class="hero">
+<h1>Support IT professionnel pour PME à Liège.</h1>
+<p>
+Interventions ponctuelles sans contrat long terme.
+Microsoft 365, sécurisation des comptes, sauvegardes, résolution d’urgences email et site web.
+</p>
+<a href="#contact" class="button">Demander un diagnostic</a>
+</section>
 
-          <div class="pillrow" aria-label="Points clés">
-            <span class="pill">Microsoft 365</span>
-            <span class="pill">MFA / comptes</span>
-            <span class="pill">Backup</span>
-            <span class="pill">Urgence DNS/SSL</span>
-            <span class="pill">Audit sécurité</span>
-          </div>
+<section id="services" class="section">
+<h2>Services</h2>
+<div class="grid">
 
-          <div class="ctaRow">
-            <a class="btn primary" href="#contact">Diagnostic gratuit (15 min)</a>
-            <a class="btn" href="#tarifs">Voir les forfaits</a>
-          </div>
+<div class="card">
+<h3>Support IT PME</h3>
+<p>
+Configuration Microsoft 365, gestion des utilisateurs, dépannage postes de travail et réseau.
+</p>
+</div>
 
-          <div class="small">
-            Zone : Liège + alentours • Paiement pro (facture) • Intervention sur site ou à distance.
-          </div>
-        </div>
+<div class="card">
+<h3>Urgence Email / Site</h3>
+<p>
+Problèmes DNS, SSL, emails bloqués, site WordPress compromis, migration hébergement.
+</p>
+</div>
 
-        <aside class="card side" aria-label="Indicateurs">
-          <div class="stat">
-            <div class="label">Disponibilité</div>
-            <div class="value">Cette semaine</div>
-            <div class="badge">Réponse <strong>&lt; 24h</strong> (jours ouvrables)</div>
-          </div>
+<div class="card">
+<h3>Audit Sécurité</h3>
+<p>
+Vérification comptes administrateurs, MFA, sauvegardes, permissions et identification des risques critiques.
+</p>
+</div>
 
-          <div class="stat">
-            <div class="label">Ticket moyen</div>
-            <div class="value">2–4h</div>
-            <div class="badge">Interventions ponctuelles + renfort urgence</div>
-          </div>
+</div>
+</section>
 
-          <div class="stat">
-            <div class="label">Satisfaction</div>
-            <div class="value">4,8 / 5</div>
-            <div class="badge">Basée sur avis (démo)</div>
-          </div>
-        </aside>
-      </div>
-    </section>
+<section id="tarifs" class="section">
+<h2>Tarifs</h2>
 
-    <section id="services">
-      <h2 class="sectionTitle">Services</h2>
-      <p class="muted">3 axes : continuité (emails), sécurité (MFA/accès), et fiabilité (backup + monitoring léger).</p>
+<div class="pricing">
 
-      <div class="cols3">
-        <div class="card tile">
-          <h3>Support IT PME</h3>
-          <p>Microsoft 365, comptes, postes, réseau basique, accompagnement utilisateurs.</p>
-        </div>
-        <div class="card tile">
-          <h3>Urgences email / site</h3>
-          <p>DNS/SSL, mails bloqués, WordPress hacké, migrations rapides et propres.</p>
-        </div>
-        <div class="card tile">
-          <h3>Audit sécurité</h3>
-          <p>Contrôles essentiels : admin, MFA, sauvegardes, partages, risques critiques.</p>
-        </div>
-      </div>
-    </section>
+<div class="card">
+<h3>Support</h3>
+<div class="price">70€ / h</div>
+<p>Demi-journée : 350€<br>Journée : 650€</p>
+</div>
 
-    <section id="tarifs">
-      <h2 class="sectionTitle">Tarifs</h2>
-      <p class="muted">Forfaits simples. Rien d’obscur. Devis si cas complexe.</p>
+<div class="card">
+<h3>Urgence</h3>
+<div class="price">À partir de 150€</div>
+<p>Diagnostic et intervention selon complexité.</p>
+</div>
 
-      <div class="pricing">
-        <div class="card priceCard">
-          <h3>Support</h3>
-          <div class="priceTag">70€ / h</div>
-          <ul class="clean">
-            <li>Minimum 2h</li>
-            <li>Sur site ou à distance</li>
-            <li>Compte rendu simple</li>
-          </ul>
-          <div style="margin-top:14px;">
-            <span class="pill">Demi-journée : 350€</span>
-            <span class="pill">Journée : 650€</span>
-          </div>
-        </div>
+<div class="card">
+<h3>Audit Sécurité</h3>
+<div class="price">950€</div>
+<p>Rapport clair avec plan d’action priorisé.</p>
+</div>
 
-        <div class="card priceCard">
-          <h3>Urgence</h3>
-          <div class="priceTag">dès 150€</div>
-          <ul class="clean">
-            <li>Diagnostic express : 150€</li>
-            <li>Intervention standard : 400€</li>
-            <li>Complexe : 600–900€</li>
-          </ul>
-          <div class="small">Ex : email down, DNS cassé, SSL expiré, site compromis.</div>
-        </div>
+</div>
+</section>
 
-        <div class="card priceCard">
-          <h3>Audit sécurité</h3>
-          <div class="priceTag">950€</div>
-          <ul class="clean">
-            <li>Checklist sécurité PME</li>
-            <li>Risques critiques + priorités</li>
-            <li>Plan d’action court</li>
-          </ul>
-          <div class="small">Livrable : PDF clair (actions + impact).</div>
-        </div>
-      </div>
-    </section>
+<section id="contact" class="section">
+<h2>Contact</h2>
 
-    <section id="avis">
-      <h2 class="sectionTitle">Avis</h2>
-      
+<div class="contact-box">
+Email : <strong>smaq.dev.web@gmail.com</strong><br>
+Téléphone : <strong>0471 49 77 79</strong><br><br>
+Intervention sur site à Liège et à distance.
+</div>
 
-      <div class="reviews">
-        <div class="card reviewList">
-          <div class="review">
-            <div class="reviewHead">
-              <div class="who"><strong>Cabinet (Liège)</strong> • M365</div>
-              <div class="stars" aria-label="5 étoiles">★★★★★</div>
-            </div>
-            <p>“Migration mail + MFA en une matinée. Propre, documenté, pas de blabla.”</p>
-            <small>— Intervention ponctuelle</small>
-          </div>
+</section>
 
-          <div class="review">
-            <div class="reviewHead">
-              <div class="who"><strong>PME (BTP)</strong> • Backup</div>
-              <div class="stars" aria-label="5 étoiles">★★★★★</div>
-            </div>
-            <p>“Sauvegarde mise en place + vérification restauration. Enfin un truc fiable.”</p>
-            <small>— Forfait demi-journée</small>
-          </div>
+<footer>
+© 2026 – Support IT & Sécurité PME – Liège
+</footer>
 
-          <div class="review">
-            <div class="reviewHead">
-              <div class="who"><strong>E-commerce</strong> • DNS/SSL</div>
-              <div class="stars" aria-label="4 étoiles">★★★★☆</div>
-            </div>
-            <p>“SSL expiré + mails qui partaient en spam. Corrigé rapidement.”</p>
-            <small>— Intervention urgence</small>
-          </div>
-        </div>
+</div>
 
-        <aside class="card reviewScore">
-          <div class="muted" style="font-size:13px;">Score moyen</div>
-          <div class="score">4,8</div>
-          <div class="stars" aria-label="4.8 étoiles">★★★★★</div>
-          <div class="scoreSub">sur 5 • (démo)</div>
-
-          <div class="meter" aria-hidden="true"><div></div></div>
-
-        
-        </aside>
-      </div>
-    </section>
-
-    <section id="contact">
-      <h2 class="sectionTitle">Contact</h2>
-      <p class="muted">Réponse sous 24h jours ouvrables. Décris le problème, je te dis direct si je peux le résoudre.</p>
-
-      <div class="contact">
-        <div class="card">
-          <form id="contactForm">
-            <label for="name">Nom</label>
-            <input id="name" name="name" placeholder="Nom / société" required />
-
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="contact@..." required />
-
-            <label for="need">Type de demande</label>
-            <select id="need" name="need" required>
-              <option value="">Choisir…</option>
-              <option>Support IT PME</option>
-              <option>Urgence email / site</option>
-              <option>Audit sécurité</option>
-              <option>Autre</option>
-            </select>
-
-            <label for="msg">Message</label>
-            <textarea id="msg" name="msg" placeholder="Contexte + urgence + outils (M365/OVH/etc.)" required></textarea>
-
-            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-              <button class="btn primary" type="submit">Envoyer</button>
-              <a class="btn" id="callBtn" href="#" role="button">Appeler</a>
-            </div>
-
-            <div class="small">
-              En cliquant “Envoyer”, votre client mail s’ouvre (mailto). Aucun tracking.
-            </div>
-          </form>
-        </div>
-
-        <div class="card contactInfo">
-          <div class="line"><span>Zone</span><strong>Liège</strong></div>
-          <div class="line"><span>Intervention</span><strong>Sur site / à distance</strong></div>
-          <div class="line"><span>Délais</span><strong>&lt; 24h</strong></div>
-
-          <div style="margin-top:12px;">
-            <div class="muted" style="font-size:13px; margin-bottom:8px;">Coordonnées (à remplacer)</div>
-            <div class="line"><span>Téléphone</span><strong id="phoneText">+32 4 XX XX XX XX</strong></div>
-            <div class="line"><span>Email</span><strong id="emailText">contact@exemple.be</strong></div>
-          </div>
-
-          <div class="note">
-            Astuce : mets un numéro “pro” (même une eSIM) + une adresse email dédiée.
-          </div>
-        </div>
-      </div>
-
-      <div class="foot">
-        © <span id="year"></span> • Support IT & Sécurité — Liège • TVA/BCE : à ajouter si applicable.
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // ==== CONFIG (à remplacer) ====
-    const CONTACT_EMAIL = "contact@exemple.be";
-    const CONTACT_PHONE = "+324XXXXXXXX";
-    const DISPLAY_PHONE = "+32 4 XX XX XX XX";
-
-    // Fill footer year + contact
-    document.getElementById("year").textContent = new Date().getFullYear();
-    document.getElementById("emailText").textContent = CONTACT_EMAIL;
-    document.getElementById("phoneText").textContent = DISPLAY_PHONE;
-
-    // Call button
-    const callBtn = document.getElementById("callBtn");
-    callBtn.href = "tel:" + CONTACT_PHONE;
-
-    // Mailto submit
-    document.getElementById("contactForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const need = document.getElementById("need").value.trim();
-      const msg = document.getElementById("msg").value.trim();
-
-      const subject = encodeURIComponent(`[Liège] ${need} — ${name}`);
-      const body = encodeURIComponent(
-        `Nom/Société : ${name}\n` +
-        `Email : ${email}\n` +
-        `Demande : ${need}\n\n` +
-        `Message :\n${msg}\n\n` +
-        `---\nEnvoyé depuis le site.`
-      );
-
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    });
-  </script>
 </body>
 </html>
